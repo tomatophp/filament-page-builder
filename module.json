@@ -1,0 +1,29 @@
+{
+    "name": "FilamentPageBuilder",
+    "alias": "filament-page-builder",
+    "description": {
+        "ar": "Manage your pages urls and build a page using dynamic Section content with drop and drag for FilamentPHP",
+        "en": "Manage your pages urls and build a page using dynamic Section content with drop and drag for FilamentPHP",
+        "gr": "Manage your pages urls and build a page using dynamic Section content with drop and drag for FilamentPHP",
+        "sp": "Manage your pages urls and build a page using dynamic Section content with drop and drag for FilamentPHP"
+    },
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "TomatoPHP\\FilamentPageBuilder\\FilamentPageBuilderServiceProvider"
+    ],
+    "files": [],
+    "title": {
+        "ar": "Filament page builder",
+        "en": "Filament page builder",
+        "gr": "Filament page builder",
+        "sp": "Filament page builder"
+    },
+    "color": "#cc1448",
+    "icon": "heroicon-c-users",
+    "placeholder": "https://raw.githubusercontent.com/tomatophp/filament-page-builder/master/art/screenshot.jpg",
+    "type": "plugin",
+    "version": "v1.0.0",
+    "github" : "https://github.com/tomatophp/filament-page-builder",
+    "docs" : "https://github.com/tomatophp/filament-page-builder"
+}
