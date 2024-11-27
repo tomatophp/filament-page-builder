@@ -21,63 +21,67 @@ class BuilderController extends Controller
     public function update(Request $request, Post $model)
     {
         $request->validate([
-            "body" => "required|string"
+            'body' => 'required|string',
         ]);
 
         $model->body = $request->get('body');
         $model->save();
 
         Toast::success(__('Page updated successfully'))->autoDismiss(2);
+
         return redirect()->back();
     }
 
-    public function builder(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model): View|JsonResponse
+    public function builder(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model): View | JsonResponse
     {
         $sections = \TomatoPHP\FilamentPageBuilder\Facades\FilamentPageBuilder::themes()->getSections()->groupBy('group');
+
         return view('filament-themes::pages.builder', compact('model', 'sections'));
     }
 
-    public function meta(Request $request,\TomatoPHP\FilamentPageBuilder\Models\Post $model){
+    public function meta(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model)
+    {
         $request->validate([
-            "section" => "required|string"
+            'section' => 'required|string',
         ]);
 
         $sectionID = $request->get('section');
         $section = collect($model->meta('sections'))->where('uuid', $sectionID)->first();
-        if($section){
-            if(!empty($section['form'])){
-                return view('filament-themes::pages.meta', compact('model','section',  'sectionID'));
-            }
-            else {
+        if ($section) {
+            if (! empty($section['form'])) {
+                return view('filament-themes::pages.meta', compact('model', 'section', 'sectionID'));
+            } else {
                 Toast::danger(__('Section do not have form'))->autoDismiss(2);
+
                 return redirect()->back();
             }
-        }
-        else {
+        } else {
             Toast::danger(__('Section not found'))->autoDismiss(2);
+
             return redirect()->back();
         }
 
     }
 
-    public function metaStore(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model){
+    public function metaStore(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model)
+    {
         $request->validate([
-            "section" => "required|string"
+            'section' => 'required|string',
         ]);
 
         $data = $request->all();
         $sectionID = $request->get('section');
         $section = collect($model->meta('sections'))->where('uuid', $sectionID)->first();
 
-        if($section){
-            if(isset($data['image'])){
+        if ($section) {
+            if (isset($data['image'])) {
                 $image = $data['image']->storeAs('public/sections', time() . '.' . $request->file('image')->extension());
-                $data['image'] =  url(Str::replace('public', 'storage', $image));
+                $data['image'] = url(Str::replace('public', 'storage', $image));
             }
 
-            if(isset($data['images']) && is_array($data['images'])){
+            if (isset($data['images']) && is_array($data['images'])) {
                 $images = [];
-                foreach ($data['images'] as $image){
+                foreach ($data['images'] as $image) {
                     $image = $image->storeAs('public/sections', time() . '.' . $image->extension());
                     $images[] = url(Str::replace('public', 'storage', $image));
                 }
@@ -88,60 +92,65 @@ class BuilderController extends Controller
             $model->meta($sectionID, $data);
 
             Toast::success(__('Section updated successfully'))->autoDismiss(2);
+
             return redirect()->back();
-        }
-        else {
+        } else {
             Toast::danger(__('Section not found'))->autoDismiss(2);
+
             return redirect()->back();
         }
 
     }
 
-    public function remove(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model){
+    public function remove(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model)
+    {
         $request->validate([
-            "section" => "required|string"
+            'section' => 'required|string',
         ]);
 
         $section = $request->get('section');
-        $sections = collect($model->meta('sections'))->filter(function ($item) use ($section){
+        $sections = collect($model->meta('sections'))->filter(function ($item) use ($section) {
             return $item['uuid'] !== $section;
         });
 
         $sections = $model->meta('sections', $sections);
 
         Toast::success(__('Section removed successfully'))->autoDismiss(2);
+
         return redirect()->back();
     }
 
-    public function sections(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model){
+    public function sections(Request $request, \TomatoPHP\FilamentPageBuilder\Models\Post $model)
+    {
         $request->validate([
-            "section" => "required|string"
+            'section' => 'required|string',
         ]);
 
         $section = TomatoThemes::find($request->get('section'));
-        if($section){
+        if ($section) {
             $sections = $model->meta('sections');
             $section['order'] = 0;
             $section['uuid'] = Str::uuid();
             $sections[] = $section;
             $model->meta('sections', $sections);
 
-
             Toast::success(__('Section added successfully'))->autoDismiss(2);
-            return redirect()->back();
-        }
-        else {
-            Toast::danger(__('Section not found'))->autoDismiss(2);
-            return redirect()->back();
-        }
 
+            return redirect()->back();
+        } else {
+            Toast::danger(__('Section not found'))->autoDismiss(2);
+
+            return redirect()->back();
+        }
 
     }
 
-    public function clear(\TomatoPHP\FilamentPageBuilder\Models\Post $model){
+    public function clear(\TomatoPHP\FilamentPageBuilder\Models\Post $model)
+    {
         $model->meta('sections', []);
 
         Toast::success(__('Sections cleared successfully'))->autoDismiss(2);
+
         return redirect()->back();
     }
 }

@@ -7,7 +7,6 @@ use Filament\Panel;
 
 class FilamentPageBuilderPlugin implements Plugin
 {
-
     public function getId(): string
     {
         return 'filament-page-builder';
