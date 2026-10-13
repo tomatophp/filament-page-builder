@@ -5,7 +5,6 @@ namespace TomatoPHP\FilamentPageBuilder\Livewire;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -78,7 +77,7 @@ class BuilderToolbar extends Component implements HasActions, HasForms
 
         return $form
             ->schema([
-                Forms\Components\Builder::make('sections')
+                Builder::make('sections')
                     ->blocks($blocks)
                     ->collapsible()
                     ->cloneable()
