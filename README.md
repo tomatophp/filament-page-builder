@@ -26,6 +26,39 @@ finally register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
 ```
 
 
+## Builder Routes and Authorization
+
+The builder registers these routes (names in brackets):
+
+- `GET admin/pages/{model}/builder` (`admin.pages.builder`)
+- `GET admin/pages/{model}/meta` (`admin.pages.meta`)
+- `POST admin/pages/{model}/meta` (`admin.pages.meta.store`)
+- `POST admin/pages/{model}/sections` (`admin.pages.sections`)
+- `POST admin/pages/{model}/sections/remove` (`admin.pages.remove`)
+- `POST admin/pages/{model}/clear` (`admin.pages.clear`)
+
+Every request is authorized with your application's policy for the page model, using the `update` ability. **You must register a policy for the page model** (Filament Shield generates one). Without a policy, every builder request returns `403`.
+
+```php
+use Illuminate\Support\Facades\Gate;
+use TomatoPHP\FilamentCms\Models\Post;
+
+Gate::policy(Post::class, \App\Policies\PostPolicy::class);
+```
+
+Pages with a `team_id` can only be edited by users who can access that team on a Filament panel with tenancy.
+
+Publish the config to change the page model, the middleware, or to turn the routes off:
+
+```php
+// config/filament-page-builder.php
+'routes' => [
+    'enabled' => env('FILAMENT_PAGE_BUILDER_ROUTES', true),
+    'middleware' => ['web', 'auth'],
+],
+'model' => \TomatoPHP\FilamentCms\Models\Post::class,
+```
+
 ## Publish Assets
 
 you can publish config file by use this command
